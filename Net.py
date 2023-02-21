@@ -2,7 +2,8 @@ import torch
 from torch import nn
 import common
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 
 class Net(nn.Module):
@@ -10,7 +11,7 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         # 第一层神经网络
-        # nn.Sequential: 将里面的模块依次加入到神经网络中
+        # nn.Sequential: 将里面的模块依次加入到神经 网络中
         self.layer1 = nn.Sequential(
             nn.Conv2d(3, 16, kernel_size=3, padding=1),  # 3通道变成16通道，图片：60*160
             nn.BatchNorm2d(16),
@@ -43,6 +44,7 @@ class Net(nn.Module):
     # 前向传播
     def forward(self, x):
         x = x.to(device)
+        
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
@@ -55,5 +57,6 @@ class Net(nn.Module):
 if __name__ == '__main__':
     data = torch.ones(1, 3, 60, 160)  # 64张图片 1表示灰色
     m = Net()
+    m.cuda()
     x = m(data)
     print(x.shape)
