@@ -12,7 +12,8 @@ from one_hot import vec2Text
 from train import calculat_acc
 
 net = Net()
-
+if torch.cuda.is_available():
+    net.cuda()
 
 def predict(inputs):
     net.eval()  # 测试模式
@@ -33,7 +34,7 @@ def test():
     model_path = 'model.pth'
     if os.path.exists(model_path):
         print('开始加载模型')
-        checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
+        checkpoint = torch.load(model_path, map_location=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'))
         net.load_state_dict(checkpoint['model_state_dict'])
     net.eval()  # 测试模式
     acc, i = 0, 0
@@ -63,7 +64,9 @@ def test_pic(path):
 
     model_path = 'model.pth'
     net.eval()
-    net.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['model_state_dict'])
+    net.load_state_dict(torch.load(model_path, map_location=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'))['model_state_dict'])
+    if torch.cuda.is_available():
+        net.cuda()
 
     output = net(img_tensor)
     output = output.view(-1, common.captcha_array.__len__())
@@ -82,6 +85,7 @@ def test_net(url):
 
 
 if __name__ == '__main__':
-    test()
-    # test_net("http://demo.ruoyi.vip/captcha/captchaImage?type=math&s=0.39236748354325024")
+    # test()
+    test_net("http://demo.ruoyi.vip/captcha/captchaImage?type=math&s=0.39236748354325024")
+    # test_net("http://172.17.44.13/prod-api/code")
     # print(test_pic("datasets/test/0+7=？_75ba9179485bcfa30dd00a09fb027231.jpg"))

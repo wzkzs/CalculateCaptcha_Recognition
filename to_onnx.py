@@ -27,5 +27,7 @@ if __name__ == "__main__":
     model = Net()
     path = "model.pth"
     onnxFile = "mathcode.onnx"
-    model.load_state_dict(torch.load(path, map_location=torch.device('cpu'))['model_state_dict'])
+    model.load_state_dict(torch.load(path, map_location=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu'))['model_state_dict'])
+    if torch.cuda.is_available():
+        model.cuda()
     Convert_ONNX(onnxFile)

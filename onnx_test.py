@@ -19,7 +19,7 @@ def to_numpy(tensor):
 
 
 if __name__ == '__main__':
-    path = "datasets/test/0+8=？_69146590872302eb7f65d52074da94a7.jpg"
+    path = "./datasets/test/6÷3=？_b6a9d6ec97fbca78b204fc0bd9c97466.jpg"
     onnxFile = 'mathcode.onnx'
 
     img = Image.open(path)
