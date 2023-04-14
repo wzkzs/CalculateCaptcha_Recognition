@@ -1,3 +1,4 @@
+import base64
 import os
 
 import torch
@@ -10,6 +11,7 @@ from CaptchaData import CaptchaData
 from Net import Net
 from one_hot import vec2Text
 from train import calculat_acc
+import json
 
 net = Net()
 if torch.cuda.is_available():
@@ -83,9 +85,24 @@ def test_net(url):
         f.write(res.content)
     print(test_pic(filepath))
 
+# 下载若依图片预测
+def test_ruoyi(url):
+    filepath = 'ruoyi.jpg'
+    import requests
+    res = requests.get(url)
+    base64_info = json.loads(res.text)['img']
+    image = base64.b64decode(base64_info)
+
+    with open(filepath, "wb") as f:
+        f.write(image)
+    captcha = test_pic(filepath)
+    formula = captcha[:-2]
+    result = eval(formula)
+    print(result)
+    
 
 if __name__ == '__main__':
     # test()
-    test_net("http://demo.ruoyi.vip/captcha/captchaImage?type=math&s=0.39236748354325024")
-    # test_net("http://172.17.44.13/prod-api/code")
-    # print(test_pic("datasets/test/0+7=？_75ba9179485bcfa30dd00a09fb027231.jpg"))
+    # test_net("http://demo.ruoyi.vip/captcha/captchaImage?type=math&s=0.39236748354325024")
+    test_ruoyi("http://172.17.44.13/prod-api/code")
+    # print(test_pic("datasets/test/.0+7=？_75ba9179485bcfa30dd00a09fb027231.jpg"))
