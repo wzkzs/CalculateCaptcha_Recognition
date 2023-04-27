@@ -97,12 +97,16 @@ def test_ruoyi(url):
         f.write(image)
     captcha = test_pic(filepath)
     formula = captcha[:-2]
+    formula = formula.replace('×', '*')
+    formula = formula.replace('÷', '/')
     result = eval(formula)
     print(result)
-    
+    return test_ruoyi
+
 
 if __name__ == '__main__':
     # test()
     # test_net("http://demo.ruoyi.vip/captcha/captchaImage?type=math&s=0.39236748354325024")
     test_ruoyi("http://172.17.44.13/prod-api/code")
-    # print(test_pic("datasets/test/.0+7=？_75ba9179485bcfa30dd00a09fb027231.jpg"))
+    # print(test_pic("datasets/test/0×3=？_d3884d37ee06ddefdd937c6a2c7246ec.jpg"))
+
